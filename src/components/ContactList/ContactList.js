@@ -1,33 +1,31 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { List } from './ContactList.styled';
 import ContactListItem from '../ContactListItem';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getFilter } from '../../Redux/contacts/filterSlice';
-import * as contactsOperations from '../../Redux/contacts/contactsOperations';
-import { getContacts } from 'Redux/contacts/contactsSelectors';
+
+import { useFetchContactsQuery } from 'Redux/contacts/contactsSlise';
 
 const ContactList = () => {
-  const contactList = useSelector(getContacts);
   const filterItem = useSelector(getFilter);
-  const dispatch = useDispatch();
-  console.log('qqqqq', contactList);
-  useEffect(() => {
-    dispatch(contactsOperations.fetchContacts());
-  }, [dispatch]);
+  const { data, error, isLoading } = useFetchContactsQuery();
+  console.log('data', data);
+  console.log('error', error);
+  console.log('isLoading', isLoading);
 
   //Responsible for rendering the requested/all contacts
   const findContactbyName = useMemo(() => {
-    return contactList.filter(contact =>
-      contact?.name.toLowerCase().includes(filterItem)
+    return data?.filter(contact =>
+      contact.name.toLowerCase().includes(filterItem)
     );
-  }, [contactList, filterItem]);
+  }, [data, filterItem]);
 
   return (
     <>
-      <h2>Contacts : {findContactbyName.length}</h2>
+      <h2>Contacts : {findContactbyName?.length}</h2>
 
       <List>
-        {findContactbyName.map(({ name, phone, id }) => (
+        {findContactbyName?.map(({ name, phone, id }) => (
           <ContactListItem key={id} name={name} number={phone} id={id} />
         ))}
       </List>

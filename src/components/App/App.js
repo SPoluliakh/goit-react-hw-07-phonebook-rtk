@@ -14,7 +14,7 @@ export const App = () => {
         border="phonebook"
         backgroundColor="phonebookBcg"
         boxShadow="boxShadow"
-        minWidth="420px"
+        minWidth="502px"
       >
         <MaineTitle>Phonebook</MaineTitle>
         <ContactForm />

@@ -6,14 +6,14 @@ import {
   FormInput,
   FormBtn,
 } from './ContactForm.styled';
-
-import { useSelector, useDispatch } from 'react-redux';
-import { postContacts } from 'Redux/contacts/contactsOperations';
-import { getContacts } from '../../Redux/contacts/contactsSelectors';
+import {
+  useAddContactsMutation,
+  useFetchContactsQuery,
+} from 'Redux/contacts/contactsSlise';
 
 const ContactForm = () => {
-  const contactList = useSelector(getContacts);
-  const dispatch = useDispatch();
+  const { data } = useFetchContactsQuery();
+  const [addContacts] = useAddContactsMutation();
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -33,18 +33,21 @@ const ContactForm = () => {
   };
 
   // Called when the form is submitted
-  const handleSubmit = evt => {
+  const handleSubmit = async evt => {
     evt.preventDefault();
-    const isInclude = contactList.map(contact => contact.name);
+    const isInclude = data?.map(contact => contact.name);
     if (isInclude.includes(name)) {
       return alert(`${name} is already in contacts`);
     }
     const contactToAdd = {
       name,
-
       phone: number,
     };
-    dispatch(postContacts(contactToAdd));
+    try {
+      await addContacts(contactToAdd);
+    } catch (err) {
+      console.log(err);
+    }
     reset();
   };
 
