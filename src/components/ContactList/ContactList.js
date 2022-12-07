@@ -8,10 +8,7 @@ import { useFetchContactsQuery } from 'Redux/contacts/contactsSlise';
 
 const ContactList = () => {
   const filterItem = useSelector(getFilter);
-  const { data, error, isLoading } = useFetchContactsQuery();
-  console.log('data', data);
-  console.log('error', error);
-  console.log('isLoading', isLoading);
+  const { data } = useFetchContactsQuery();
 
   //Responsible for rendering the requested/all contacts
   const findContactbyName = useMemo(() => {
